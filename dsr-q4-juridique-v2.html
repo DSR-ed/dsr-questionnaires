@@ -911,7 +911,7 @@ function teleTransmettre() {
   const nom = document.getElementById('clientNom').value.trim();
   const ent = document.getElementById('clientEntreprise').value.trim();
   const texte = genererTexte();
-  const subj  = encodeURIComponent(`Questionnaire Documentation Juridique — ${ent || nom} — DSR`);
+  const subj  = encodeURIComponent(`Retour Questionnaire Documentation Juridique — ${ent || nom} — DSR`);
   const body  = encodeURIComponent(texte);
   window.location.href = `mailto:contact@dsr-agency.com?subject=${subj}&body=${body}`;
   setTimeout(() => {
