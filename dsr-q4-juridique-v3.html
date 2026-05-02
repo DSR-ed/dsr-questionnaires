@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Questionnaire Documentation Juridique — DSR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080A0C;--bg-card:#111416;--bg-surf:#181C20;
+  --acc:#660ab8;--acc-h:#b178e3;--acc-rgb:102,10,184;
+  --chrome:#C8D6E5;--txt:#F0F4F8;--txt2:#7A8FA6;
+  --bdr:rgba(255,255,255,0.07);--font:'Plus Jakarta Sans',system-ui,sans-serif;
+  --ease:cubic-bezier(0.32,0.72,0,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--txt);line-height:1.7;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.012) 2px,rgba(255,255,255,0.012) 4px),
+  repeating-linear-gradient(90deg,transparent,transparent 2px,rgba(255,255,255,0.008) 2px,rgba(255,255,255,0.008) 4px);}
+body::after{content:'';position:fixed;top:-20%;left:50%;transform:translateX(-50%);width:900px;height:600px;
+  background:radial-gradient(ellipse at center,rgba(var(--acc-rgb),0.09) 0%,transparent 70%);z-index:0;pointer-events:none;}
+header,main,footer,section,nav,div{position:relative;z-index:1}
+
+/* ── NAV responsive ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;
+  justify-content:space-between;padding:0 20px;height:60px;
+  background:rgba(8,10,12,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);}
+.nav-brand{display:flex;align-items:center;gap:10px;min-width:0}
+.nav-logo-text{font-size:13px;font-weight:800;color:var(--txt);letter-spacing:-0.3px;white-space:nowrap}
+.nav-logo-text span{color:var(--acc)}
+.nav-badge{padding:3px 10px;background:rgba(var(--acc-rgb),0.12);border:1px solid rgba(var(--acc-rgb),0.3);
+  border-radius:100px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--acc);white-space:nowrap;flex-shrink:0}
+.nav-info{font-size:11px;font-weight:500;color:var(--txt2);white-space:nowrap;display:none}
+@media(min-width:600px){.nav{padding:0 36px;height:68px}.nav-logo-text{font-size:14px}.nav-badge{font-size:10px;padding:4px 12px}.nav-info{display:block}}
+
+/* ── PROGRESS ── */
+.progress-bar-wrap{position:fixed;top:60px;left:0;right:0;z-index:99;
+  background:rgba(8,10,12,0.95);backdrop-filter:blur(10px);
+  padding:8px 16px;border-bottom:1px solid var(--bdr);
+  display:flex;align-items:center;gap:10px;}
+@media(min-width:600px){.progress-bar-wrap{top:68px;padding:10px 36px;gap:16px}}
+.progress-track{flex:1;height:3px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden}
+.progress-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--acc),var(--acc-h));
+  transition:width 0.5s var(--ease);width:0%}
+.progress-label{font-size:10px;font-weight:600;color:var(--txt2);letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+@media(min-width:600px){.progress-label{font-size:11px;letter-spacing:1.5px}}
+.progress-pct{font-size:11px;font-weight:700;color:var(--acc);min-width:28px;text-align:right}
+
+/* ── HERO responsive ── */
+.hero{padding:110px 16px 48px;text-align:center;max-width:800px;margin:0 auto}
+@media(min-width:600px){.hero{padding:148px 32px 64px}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;
+  border:1px solid rgba(var(--acc-rgb),0.35);border-radius:100px;font-size:9px;font-weight:600;
+  letter-spacing:2.5px;text-transform:uppercase;color:var(--acc);background:rgba(var(--acc-rgb),0.07);margin-bottom:24px}
+@media(min-width:600px){.hero-badge{padding:6px 18px;font-size:10px;letter-spacing:3px;margin-bottom:32px}}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:var(--acc);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.35;transform:scale(0.75)}}
+.hero-title{font-size:clamp(30px,7vw,60px);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:16px}
+.hero-title .grad{background:linear-gradient(135deg,var(--chrome) 0%,var(--acc) 65%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:14px;color:var(--txt2);line-height:1.75;max-width:560px;margin:0 auto 28px}
+@media(min-width:600px){.hero-sub{font-size:16px;margin-bottom:40px}}
+.hero-meta{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+@media(min-width:600px){.hero-meta{gap:32px}}
+.hero-meta-item{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:500;color:var(--txt2)}
+@media(min-width:600px){.hero-meta-item{gap:8px;font-size:12px}}
+.hero-meta-icon{width:24px;height:24px;border-radius:7px;background:rgba(var(--acc-rgb),0.1);
+  border:1px solid rgba(var(--acc-rgb),0.2);display:flex;align-items:center;justify-content:center;font-size:11px}
+@media(min-width:600px){.hero-meta-icon{width:28px;height:28px;font-size:13px}}
+
+/* ── BLOCS / SECTIONS responsive ── */
+.client-section,.bloc{max-width:760px;margin:0 auto 10px;padding:0 12px}
+@media(min-width:600px){.client-section,.bloc{padding:0 20px;margin-bottom:12px}}
+.section-shell{background:rgba(255,255,255,0.02);border:1px solid var(--bdr);border-radius:16px;padding:2px}
+@media(min-width:600px){.section-shell{border-radius:20px}}
+.section-core{background:var(--bg-card);border-radius:14px;padding:20px 16px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.04)}
+@media(min-width:600px){.section-core{border-radius:18px;padding:32px}}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--bdr);flex-wrap:wrap}
+@media(min-width:600px){.section-header{gap:14px;margin-bottom:28px;padding-bottom:20px}}
+.bloc-badge{padding:4px 10px;border-radius:100px;background:rgba(var(--acc-rgb),0.12);
+  border:1px solid rgba(var(--acc-rgb),0.25);font-size:9px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--acc);white-space:nowrap}
+@media(min-width:600px){.bloc-badge{padding:5px 14px;font-size:10px;letter-spacing:2.5px}}
+.section-title-text{font-size:15px;font-weight:700;color:var(--txt);letter-spacing:-0.2px}
+@media(min-width:600px){.section-title-text{font-size:17px}}
+
+/* ── GRILLE client responsive ── */
+.fields-grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:500px){.fields-grid{grid-template-columns:1fr 1fr;gap:16px}}
+.fields-grid.full{grid-template-columns:1fr!important}
+.field-wrap{display:flex;flex-direction:column;gap:6px}
+.field-label{font-size:11px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase}
+.field-label .req{color:var(--acc);margin-left:2px}
+.field-input{background:var(--bg-surf);border:1px solid rgba(255,255,255,0.09);border-radius:10px;
+  padding:12px 14px;font-family:var(--font);font-size:14px;color:var(--txt);outline:none;
+  transition:border-color 0.3s var(--ease),box-shadow 0.3s var(--ease);width:100%}
+.field-input::placeholder{color:var(--txt2);opacity:0.6}
+.field-input:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(var(--acc-rgb),0.12)}
+.date-display{background:var(--bg-surf);border:1px solid rgba(255,255,255,0.09);border-radius:10px;
+  padding:12px 14px;font-size:13px;color:var(--txt2);font-style:italic}
+
+/* ── QUESTIONS responsive ── */
+.question{padding:18px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.question:last-child{border-bottom:none;padding-bottom:0}
+@media(min-width:600px){.question{padding:22px 0}}
+.q-num{display:inline-block;font-size:10px;font-weight:700;color:var(--acc);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
+.q-text{font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px;line-height:1.5}
+@media(min-width:600px){.q-text{font-size:14px}}
+.q-hint{font-size:11px;color:var(--txt2);margin-bottom:12px;font-style:italic}
+@media(min-width:600px){.q-hint{font-size:12px}}
+.options{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.opt-label{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:10px;
+  background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);
+  cursor:pointer;transition:all 0.25s var(--ease);font-size:13px;color:var(--txt2);font-weight:500;line-height:1.4}
+.opt-label:hover{background:rgba(var(--acc-rgb),0.06);border-color:rgba(var(--acc-rgb),0.25);color:var(--txt)}
+.opt-label input[type=checkbox],.opt-label input[type=radio]{
+  appearance:none;-webkit-appearance:none;width:18px;height:18px;min-width:18px;
+  border-radius:5px;border:1.5px solid rgba(255,255,255,0.18);background:var(--bg-surf);
+  flex-shrink:0;cursor:pointer;position:relative;transition:all 0.25s var(--ease);margin-top:1px}
+.opt-label input[type=radio]{border-radius:50%}
+.opt-label input[type=checkbox]:checked,.opt-label input[type=radio]:checked{
+  background:var(--acc);border-color:var(--acc);box-shadow:0 0 0 3px rgba(var(--acc-rgb),0.2)}
+.opt-label input[type=checkbox]:checked::after{content:'✓';position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:11px;font-weight:700}
+.opt-label input[type=radio]:checked::after{content:'';position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);width:7px;height:7px;border-radius:50%;background:#fff}
+.opt-label:has(input:checked){background:rgba(var(--acc-rgb),0.08);border-color:rgba(var(--acc-rgb),0.3);color:var(--txt)}
+.precision-wrap{margin-top:8px}
+.precision-label{font-size:11px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;margin-bottom:6px;display:block}
+.field-input.sm{padding:10px 12px;font-size:13px;border-radius:8px}
+textarea.field-input{min-height:88px;resize:vertical;line-height:1.6}
+
+/* ── SOUS-CHAMPS responsive ── */
+.sub-fields{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.sub-field-row{display:grid;grid-template-columns:100px 1fr;gap:8px;align-items:center}
+@media(min-width:500px){.sub-field-row{grid-template-columns:130px 1fr;gap:10px}}
+.sub-field-lbl{font-size:12px;font-weight:600;color:var(--txt2)}
+
+/* ── ERREUR INLINE ── */
+.inline-error{display:none;margin-top:14px;padding:11px 14px;border-radius:10px;
+  background:rgba(102,10,184,0.08);border:1px solid rgba(102,10,184,0.3);
+  font-size:13px;color:#b178e3;font-weight:500}
+
+/* ── SECTION BOUTONS EN FIN DE PAGE (non sticky) ── */
+.action-section{max-width:760px;margin:32px auto 0;padding:0 12px 60px}
+@media(min-width:600px){.action-section{padding:0 20px 80px}}
+.action-shell{background:rgba(255,255,255,0.02);border:1px solid var(--bdr);border-radius:16px;padding:2px}
+@media(min-width:600px){.action-shell{border-radius:20px}}
+.action-core{background:var(--bg-card);border-radius:14px;padding:24px 16px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);text-align:center}
+@media(min-width:600px){.action-core{border-radius:18px;padding:32px}}
+.action-title{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:6px}
+@media(min-width:600px){.action-title{font-size:16px}}
+.action-sub{font-size:12px;color:var(--txt2);margin-bottom:20px;line-height:1.6}
+.completion-bar-wrap{margin-bottom:20px}
+.completion-label{font-size:12px;color:var(--txt2);margin-bottom:8px;display:flex;justify-content:space-between}
+.completion-track{height:6px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden}
+.completion-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--acc),var(--acc-h));
+  transition:width 0.6s var(--ease);width:0%}
+.action-btns{display:flex;flex-direction:column;gap:10px}
+@media(min-width:500px){.action-btns{flex-direction:row;justify-content:center;flex-wrap:wrap}}
+
+/* ── BOUTON ENVOYER (principal) ── */
+.btn-send{display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:15px 28px;background:var(--acc);color:#fff;font-family:var(--font);
+  font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border:none;
+  border-radius:10px;cursor:pointer;transition:all 0.35s var(--ease);
+  box-shadow:0 4px 20px rgba(var(--acc-rgb),0.3);width:100%}
+@media(min-width:500px){.btn-send{width:auto}}
+.btn-send:disabled{opacity:0.35;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.btn-send:not(:disabled):hover{background:var(--acc-h);transform:translateY(-2px);
+  box-shadow:0 10px 28px rgba(var(--acc-rgb),0.42)}
+.btn-send .btn-icon{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;font-size:12px;
+  transition:transform 0.35s var(--ease)}
+.btn-send:not(:disabled):hover .btn-icon{transform:translate(2px,-2px)}
+
+/* ── BOUTONS TÉLÉCHARGEMENT (secondaires, cachés au départ) ── */
+.btn-dl{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 22px;background:transparent;color:var(--chrome);font-family:var(--font);
+  font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  border:1px solid rgba(200,214,229,0.25);border-radius:10px;cursor:pointer;
+  transition:all 0.35s var(--ease);width:100%}
+@media(min-width:500px){.btn-dl{width:auto}}
+.btn-dl:disabled{opacity:0.25;cursor:not-allowed}
+.btn-dl:not(:disabled):hover{border-color:rgba(200,214,229,0.65);background:rgba(200,214,229,0.05);transform:translateY(-2px)}
+.dl-note{font-size:11px;color:var(--txt2);margin-top:12px;font-style:italic;opacity:0.7}
+
+/* ── BADGE ENVOYÉ ── */
+.sent-badge{display:none;align-items:center;gap:8px;padding:8px 16px;
+  border-radius:100px;background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.3);
+  font-size:12px;font-weight:600;color:#2ecc71;margin-bottom:16px;justify-content:center}
+.sent-badge.show{display:flex}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--bg-card);border:1px solid rgba(var(--acc-rgb),0.4);border-radius:12px;
+  padding:12px 20px;font-size:13px;font-weight:500;color:var(--txt);
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);z-index:200;opacity:0;
+  transition:all 0.4s var(--ease);pointer-events:none;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.error{border-color:rgba(102,10,184,0.5);color:#b178e3}
+.toast.success{border-color:rgba(39,174,96,0.5);color:#2ecc71}
+
+/* ── FOOTER ── */
+.page-footer{max-width:760px;margin:0 auto;padding:32px 16px 40px;border-top:1px solid var(--bdr);text-align:center}
+.page-footer-brand{font-size:14px;font-weight:800;color:var(--txt);margin-bottom:8px}
+.page-footer-brand span{color:var(--acc)}
+.page-footer-info{font-size:12px;color:var(--txt2);line-height:1.8}
+.page-footer-conf{font-size:10px;color:rgba(122,143,166,0.4);margin-top:10px}
+
+/* ── LOGO DSR ── */
+.dsr-logo{height:36px;width:auto;object-fit:contain;
+  filter:drop-shadow(0 0 10px rgba(255,255,255,0.15));display:block;}
+.dsr-logo-footer{height:52px;width:auto;object-fit:contain;
+  filter:drop-shadow(0 0 8px rgba(255,255,255,0.1));display:block;margin:0 auto 12px;}
+
+
+/* ============================================
+   BLOC SÉLECTION DES PRODUITS DSR JURIDIQUE
+   ============================================ */
+
+.products-intro{margin-bottom:28px;padding:0}
+.products-intro-text{
+  color:var(--txt2);font-size:14.5px;line-height:1.7;margin-bottom:18px;
+  padding:0 4px;
+}
+.products-tarif-notice{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:16px 18px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(102,10,184,0.10),rgba(177,120,227,0.06));
+  border:1px solid rgba(177,120,227,0.22);
+  margin-top:8px;
+}
+.products-tarif-notice-icon{
+  font-size:20px;flex-shrink:0;line-height:1;padding-top:2px;
+}
+.products-tarif-notice-body{
+  color:var(--txt);font-size:13px;line-height:1.7;
+}
+.products-tarif-notice-body strong{
+  color:var(--acc-h);font-weight:700;
+}
+
+.product-category{margin-bottom:26px}
+.product-category-header{
+  display:flex;align-items:baseline;gap:14px;
+  padding-bottom:10px;margin-bottom:14px;
+  border-bottom:1px solid var(--bdr);
+}
+.product-category-title{
+  margin:0;font-size:15px;font-weight:700;letter-spacing:-0.01em;
+  color:var(--txt);
+}
+.product-category-subtitle{
+  margin:0;font-size:11.5px;color:var(--txt2);font-weight:500;
+}
+
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:10px;
+}
+
+.product-card{
+  position:relative;display:block;cursor:pointer;
+  user-select:none;-webkit-tap-highlight-color:transparent;
+}
+.product-card input{
+  position:absolute;opacity:0;pointer-events:none;width:0;height:0;
+}
+.product-card-inner{
+  position:relative;
+  padding:12px 14px;
+  border-radius:12px;
+  background:var(--bg-surf);
+  border:1px solid var(--bdr);
+  transition:all 0.2s var(--ease);
+  min-height:108px;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.product-card:hover .product-card-inner{
+  border-color:rgba(177,120,227,0.32);
+  background:rgba(102,10,184,0.06);
+  transform:translateY(-1px);
+}
+.product-card input:checked ~ .product-card-inner{
+  border-color:var(--acc-h);
+  background:linear-gradient(135deg,rgba(102,10,184,0.18),rgba(177,120,227,0.10));
+  box-shadow:0 0 0 1px var(--acc-h),0 4px 16px rgba(102,10,184,0.20);
+}
+
+.product-card-top{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:8px;margin-bottom:6px;
+}
+.product-card-code{
+  font-size:10.5px;font-weight:700;letter-spacing:0.08em;
+  color:var(--txt2);
+  padding:2px 7px;border-radius:6px;
+  background:rgba(255,255,255,0.04);
+  font-variant-numeric:tabular-nums;
+}
+.product-card input:checked ~ .product-card-inner .product-card-code{
+  color:var(--acc-h);background:rgba(177,120,227,0.12);
+}
+.product-card-badge{
+  font-size:9.5px;font-weight:700;letter-spacing:0.08em;
+  text-transform:uppercase;
+  padding:3px 8px;border-radius:999px;
+  background:rgba(177,120,227,0.10);
+  color:var(--acc-h);
+  border:1px solid rgba(177,120,227,0.20);
+  white-space:nowrap;
+}
+
+.product-card-title{
+  font-size:13px;font-weight:600;color:var(--txt);
+  line-height:1.35;letter-spacing:-0.01em;
+  margin:2px 0 8px;
+}
+
+.product-card-bottom{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  gap:6px;
+}
+.product-card-tarif{
+  font-size:13px;color:var(--txt);font-weight:500;
+  font-variant-numeric:tabular-nums;
+}
+.product-card-tarif strong{
+  font-size:15px;font-weight:700;color:var(--acc-h);
+  letter-spacing:-0.01em;
+}
+.product-card-tarif-note{
+  font-size:9.5px;color:var(--txt2);font-style:italic;
+  letter-spacing:0.02em;
+  text-transform:lowercase;
+}
+
+.product-card-check{
+  position:absolute;top:10px;right:10px;
+  width:20px;height:20px;border-radius:50%;
+  background:transparent;
+  border:2px solid var(--bdr);
+  transition:all 0.2s var(--ease);
+  display:none;
+}
+.product-card input:checked ~ .product-card-inner .product-card-check{
+  background:var(--acc-h);border-color:var(--acc-h);
+  display:block;
+}
+.product-card input:checked ~ .product-card-inner .product-card-check::before{
+  content:'✓';position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  color:#fff;font-size:13px;font-weight:700;
+}
+
+.products-summary{
+  display:flex;align-items:center;gap:16px;
+  margin-top:24px;margin-bottom:18px;
+  padding:16px 20px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(102,10,184,0.14),rgba(177,120,227,0.08));
+  border:1px solid rgba(177,120,227,0.28);
+}
+.products-summary-icon{font-size:24px;flex-shrink:0}
+.products-summary-content{flex:1;display:flex;flex-direction:column;gap:3px}
+.products-summary-count{font-size:13px;color:var(--txt)}
+.products-summary-count strong{color:var(--acc-h);font-size:15px;font-weight:700}
+.products-summary-total{font-size:14px;color:var(--txt);font-weight:500}
+.products-summary-total strong{color:var(--acc-h);font-weight:700;font-size:16px}
+.products-summary-disclaimer{font-size:11px;color:var(--txt2);font-style:italic;margin-top:2px}
+
+.products-precision{
+  margin-top:18px;padding-top:18px;
+  border-top:1px solid var(--bdr);
+}
+
+@media (max-width:640px){
+  .product-grid{grid-template-columns:1fr;gap:8px}
+  .product-card-inner{min-height:100px;padding:11px 13px}
+  .products-summary{flex-direction:column;align-items:flex-start;gap:10px}
+}
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    <img src="dsr-logo.png" alt="DSR" class="dsr-logo"/>
+    <span class="nav-badge">Documentation Juridique</span>
+  </div>
+  <span class="nav-info">Questionnaire client confidentiel</span>
+</nav>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <span class="progress-label" id="progressLabel">0 réponse</span>
+  <span class="progress-pct" id="progressPct">0%</span>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div style="display:flex;justify-content:center;margin-bottom:20px;"><img src="dsr-logo.png" alt="DSR" class="dsr-logo"/></div>
+  <div class="hero-badge"><div class="hero-dot"></div>Questionnaire confidentiel</div>
+  <h1 class="hero-title">Questionnaire<br><span class="grad">Documentation Juridique</span></h1>
+  <p class="hero-sub">Ce questionnaire nous permet d'identifier précisément vos besoins documentaires et de vous soumettre une proposition sur mesure. Comptez 20 à 25 minutes. Plus vous êtes précis, plus nos documents seront opérationnels dès la livraison.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><div class="hero-meta-icon">📋</div>23 questions · 7 sections</div>
+    <div class="hero-meta-item"><div class="hero-meta-icon">⏱</div>20–25 min</div>
+    <div class="hero-meta-item"><div class="hero-meta-icon">💾</div>Sauvegardé auto.</div>
+  </div>
+</div>
+
+<!-- INFOS CLIENT -->
+<div class="client-section">
+  <div class="section-shell"><div class="section-core">
+    <div class="section-header">
+      <span class="bloc-badge">Vos informations</span>
+      <span class="section-title-text">Identification du client</span>
+    </div>
+    <div class="fields-grid">
+      <div class="field-wrap">
+        <label class="field-label">Prénom et Nom <span class="req">*</span></label>
+        <input class="field-input" id="clientNom" type="text" placeholder="ex. Jean Dupont" autocomplete="name"/>
+      </div>
+      <div class="field-wrap">
+        <label class="field-label">Nom de votre entreprise</label>
+        <input class="field-input" id="clientEntreprise" type="text" placeholder="ex. Dupont Plomberie"/>
+      </div>
+      <div class="field-wrap">
+        <label class="field-label">Email de contact <span class="req">*</span></label>
+        <input class="field-input" id="clientEmail" type="email" placeholder="ex. jean@entreprise.fr" autocomplete="email"/>
+      </div>
+      <div class="field-wrap">
+        <label class="field-label">Téléphone</label>
+        <input class="field-input" id="clientTel" type="tel" placeholder="ex. 06 12 34 56 78"/>
+      </div>
+    </div>
+    <div class="fields-grid full" style="margin-top:14px">
+      <div class="field-wrap">
+        <label class="field-label">Date de remplissage</label>
+        <div class="date-display" id="dateDisplay"></div>
+      </div>
+    </div>
+    <div class="inline-error" id="clientError">⚠ Merci de renseigner votre nom et votre email avant d'envoyer.</div>
+  </div></div>
+</div>
+
+
+<!-- BLOC A -->
+<div class="bloc"><div class="section-shell"><div class="section-core">
+  <div class="section-header"><span class="bloc-badge">Bloc A</span><span class="section-title-text">Votre projet et vos objectifs</span></div>
+
+  <div class="question" id="q-a1">
+    <div class="q-num">A1</div><div class="q-text">Pourquoi avez-vous besoin d'une documentation professionnelle ?</div>
+    <div class="q-hint">Plusieurs choix possibles</div>
+    <div class="options">
+      <label class="opt-label"><input type="checkbox" data-q="a1"/>Je crée mon entreprise et j'ai besoin des documents de départ</label>
+      <label class="opt-label"><input type="checkbox" data-q="a1"/>Mon activité évolue et mes documents sont devenus inadaptés</label>
+      <label class="opt-label"><input type="checkbox" data-q="a1"/>J'ai eu un litige et je veux me protéger pour l'avenir</label>
+      <label class="opt-label"><input type="checkbox" data-q="a1"/>Je dois présenter un dossier à une banque ou un organisme</label>
+      <label class="opt-label"><input type="checkbox" data-q="a1"/>Mon site internet nécessite des mentions légales et CGV obligatoires</label>
+      <label class="opt-label"><input type="checkbox" data-q="a1"/>Je veux professionnaliser mes devis, contrats et factures</label>
+    </div>
+    <div class="precision-wrap"><span class="precision-label">Autre raison / Précision :</span>
+    <input class="field-input sm" data-q="a1-prec" type="text" placeholder="Décrivez en quelques mots..."/></div>
+  </div>
+
+  <div class="question" id="q-a2">
+    <div class="q-num">A2</div><div class="q-text">Quel est le but principal de ce document ou de cet ensemble de documents ?</div>
+    <div class="q-hint">Plusieurs choix possibles</div>
+    <div class="options">
+      <label class="opt-label"><input type="checkbox" data-q="a2"/>Sécuriser mes prestations et mes ventes</label>
+      <label class="opt-label"><input type="checkbox" data-q="a2"/>Lever des fonds ou présenter mon activité (banque, investisseur, organisme)</label>
+      <label class="opt-label"><input type="checkbox" data-q="a2"/>Me mettre en règle (RGPD, mentions légales, fiscalité)</label>
+      <label class="opt-label"><input type="checkbox" data-q="a2"/>Structurer mon activité et gagner en crédibilité</label>
+      <label class="opt-label"><input type="checkbox" data-q="a2"/>Anticiper les litiges et les impayés</label>
+      <label class="opt-label"><input type="checkbox" data-q="a2"/>Disposer d'une base solide pour développer mon entreprise</label>
+    </div>
+  </div>
+
+  <div class="question" id="q-a3">
+    <div class="q-num">A3</div><div class="q-text">Y a-t-il des éléments contextuels importants à connaître ?</div>
+    <div class="q-hint">Activité, secteur, contraintes particulières, projets en cours...</div>
+    <textarea class="field-input" data-q="a3" placeholder="Exemples : mon activité a commencé récemment, je vise un public spécifique, j'ai des contraintes réglementaires sectorielles..." style="margin-top:10px;min-height:110px"></textarea>
+  </div>
+</div></div></div>
+
+<!-- BLOC B -->
+<div class="bloc"><div class="section-shell"><div class="section-core">
+  <div class="section-header"><span class="bloc-badge">Bloc B</span><span class="section-title-text">Documents souhaités (questions générales)</span></div>
+
+  <div class="question" id="q-b1">
+    <div class="q-num">B1</div><div class="q-text">Analyse stratégique</div>
+    <div class="q-hint">Plusieurs choix possibles</div>
+    <div class="options" style="margin-top:6px">
+      <label class="opt-label"><input type="checkbox" data-q="b1"/>Étude de marché personnalisée</label>
+      <label class="opt-label"><input type="checkbox" data-q="b1"/>Veille concurrentielle approfondie</label>
+      <label class="opt-label"><input type="checkbox" data-q="b1"/>Analyse SWOT personnalisée</label>
+    </div>
+  </div>
+
+  <div class="question" id="q-b2">
+    <div class="q-num">B2</div><div class="q-text">Modèle économique et financier</div>
+    <div class="q-hint">Plusieurs choix possibles</div>
+    <div class="options" style="margin-top:6px">
+      <label class="opt-label"><input type="checkbox" data-q="b2"/>Business plan complet sur 3 ans</label>
+      <label class="opt-label"><input type="checkbox" data-q="b2"/>Grille tarifaire officielle et argumentée</label>
+      <label class="opt-label"><input type="checkbox" data-q="b2"/>Simulation de rentabilité (scénarios prudent / réaliste / optimiste)</label>
+    </div>
+  </div>
+
+  <div class="question" id="q-b3">
+    <div class="q-num">B3</div><div class="q-text">Cadre juridique et administratif</div>
+    <div class="q-hint">Plusieurs choix possibles</div>
+    <div class="options" style="margin-top:6px">
+      <label class="opt-label"><input type="checkbox" data-q="b3"/>CGV sur mesure (Conditions Générales de Vente)</label>
+      <label class="opt-label"><input type="checkbox" data-q="b3"/>Contrat type client</label>
+      <label class="opt-label"><input type="checkbox" data-q="b3"/>Note juridique spécifique à mon secteur d'activité</label>
+      <label class="opt-label"><input type="checkbox" data-q="b3"/>Note RGPD et politique de confidentialité</label>
+      <label class="opt-label"><input type="checkbox" data-q="b3"/>Mentions légales (site internet)</label>
+    </div>
+  </div>
+
+  <div class="question" id="q-b4">
+    <div class="q-num">B4</div><div class="q-text">Plan commercial et développement</div>
+    <div class="q-hint">Plusieurs choix possibles</div>
+    <div class="options" style="margin-top:6px">
+      <label class="opt-label"><input type="checkbox" data-q="b4"/>Plan commercial sur 12 mois</label>
+      <label class="opt-label"><input type="checkbox" data-q="b4"/>Argumentaire commercial et plaquette B2B</label>
+      <label class="opt-label"><input type="checkbox" data-q="b4"/>Courriers de partenariats institutionnels</label>
+      <label class="opt-label"><input type="checkbox" data-q="b4"/>Modèles d'emails de prospection personnalisés</label>
+    </div>
+  </div>
+
+  <div class="question" id="q-b6">
+    <div class="q-num">B5</div><div class="q-text">Documents commerciaux</div>
+    <div class="q-hint">Plusieurs choix possibles</div>
+    <div class="options" style="margin-top:6px">
+      <label class="opt-label"><input type="checkbox" data-q="b6"/>Modèles de factures aux normes légales</label>
+      <label class="opt-label"><input type="checkbox" data-q="b6"/>Modèles de devis professionnels</label>
+      <label class="opt-label"><input type="checkbox" data-q="b6"/>Contrats de prestation de services</label>
+      <label class="opt-label"><input type="checkbox" data-q="b6"/>Documents RGPD site internet (CGU, cookies)</label>
+    </div>
+    <div class="precision-wrap"><span class="precision-label">Autre document non listé :</span>
+    <input class="field-input sm" data-q="b6-prec" type="text" placeholder="Décrivez le document souhaité..."/></div>
+  </div>
+
+  <div class="question" id="q-b7">
+    <div class="q-num">B6</div><div class="q-text">Avez-vous des documents existants à mettre à jour ou améliorer ?</div>
+    <div class="q-hint">Un seul choix</div>
+    <div class="options" style="margin-top:10px">
+      <label class="opt-label"><input type="radio" name="b7" data-q="b7"/>Non, tout est à créer de zéro</label>
+      <label class="opt-label"><input type="radio" name="b7" data-q="b7"/>Oui, je les fournis par email</label>
+      <label class="opt-label"><input type="radio" name="b7" data-q="b7"/>Partiellement — certains documents existent mais sont incomplets</label>
+    </div>
+  </div>
+</div></div></div>
+
+<!-- BLOC C -->
+<div class="bloc"><div class="section-shell"><div class="section-core">
+  <div class="section-header"><span class="bloc-badge">Bloc C</span><span class="section-title-text">Votre activité et votre situation</span></div>
+
+  <div class="question" id="q-c1">
+    <div class="q-num">C1</div><div class="q-text">Quel est votre statut juridique ?</div>
+    <div class="q-hint">Un seul choix</div>
+    <div class="options">
+      <label class="opt-label"><input type="radio" name="c1" data-q="c1"/>Micro-entrepreneur (auto-entrepreneur)</label>
+      <label class="opt-label"><input type="radio" name="c1" data-q="c1"/>EURL / SASU</label>
+      <label class="opt-label"><input type="radio" name="c1" data-q="c1"/>SARL / SAS</label>
+      <label class="opt-label"><input type="radio" name="c1" data-q="c1"/>Société en cours de création</label>
+      <label class="opt-label"><input type="radio" name="c1" data-q="c1"/>Association</label>
+    </div>
+    <div class="precision-wrap"><span class="precision-label">Autre statut :</span>
+    <input class="field-input sm" data-q="c1-prec" type="text" placeholder="Précisez votre statut..."/></div>
+  </div>
+
+  <div class="question" id="q-c2">
+    <div class="q-num">C2</div><div class="q-text">Votre entreprise est-elle déjà immatriculée ?</div>
+    <div class="q-hint">Un seul choix</div>
+    <div class="options">
+      <label class="opt-label"><input type="radio" name="c2" data-q="c2"/>Oui</label>
+      <label class="opt-label"><input type="radio" name="c2" data-q="c2"/>Non — création en cours</label>
+      <label class="opt-label"><input type="radio" name="c2" data-q="c2"/>Non — création prévue prochainement</label>
+    </div>
+    <div class="precision-wrap"><span class="precision-label">Date d'immatriculation ou de création prévue :</span>
+    <input class="field-input sm" data-q="c2-prec" type="text" placeholder="Ex. : janvier 2026"/></div>
+  </div>
+
+  <div class="question" id="q-c3">
+    <div class="q-num">C3</div><div class="q-text">Quel est votre secteur d'activité ?</div>
+    <div class="q-hint">Plusieurs choix possibles</div>
+    <div class="options">
+      <label class="opt-label"><input type="checkbox" data-q="c3"/>Artisanat et métiers manuels</label>
+      <label class="opt-label"><input type="checkbox" data-q="c3"/>Services aux particuliers</label>
+      <label class="opt-label"><input type="checkbox" data-q="c3"/>Services aux entreprises</label>
+      <label class="opt-label"><input type="checkbox" data-q="c3"/>Commerce (vente de produits)</label>
+      <label class="opt-label"><input type="checkbox" data-q="c3"/>Santé et bien-être</label>
+      <label class="opt-label"><input type="checkbox" data-q="c3"/>Bâtiment / rénovation</label>
+      <label class="opt-label"><input type="checkbox" data-q="c3"/>Alimentaire et restauration</label>
+      <label class="opt-label"><input type="checkbox" data-q="c3"/>Funéraire / entretien de sépultures</label>
+    </div>
+    <div class="precision-wrap"><span class="precision-label">Autre secteur :</span>
+    <input class="field-input sm" data-q="c3-prec" type="text" placeholder="Précisez votre secteur..."/></div>
+  </div>
+
+  <div class="question" id="q-c5">
+    <div class="q-num">C4</div><div class="q-text">Avez-vous un accompagnement par un organisme externe ?</div>
+    <div class="q-hint">CCI, BGE, France Travail, couveuse... Un seul choix</div>
+    <div class="options">
+      <label class="opt-label"><input type="radio" name="c5" data-q="c5"/>Non</label>
+      <label class="opt-label"><input type="radio" name="c5" data-q="c5"/>Oui</label>
+      <label class="opt-label"><input type="radio" name="c5" data-q="c5"/>En cours de démarche</label>
+    </div>
+    <div class="precision-wrap"><span class="precision-label">Organisme d'accompagnement :</span>
+    <input class="field-input sm" data-q="c5-prec" type="text" placeholder="Nom de l'organisme..."/></div>
+  </div>
+</div></div></div>
+
+<!-- BLOC D -->
+<div class="bloc"><div class="section-shell"><div class="section-core">
+  <div class="section-header"><span class="bloc-badge">Bloc D</span><span class="section-title-text">Vos clients et vos contrats</span></div>
+
+  <div class="question" id="q-d1">
+    <div class="q-num">D1</div><div class="q-text">Qui sont vos clients ?</div>
+    <div class="q-hint">Un seul choix</div>
+    <div class="options">
+      <label class="opt-label"><input type="radio" name="d1" data-q="d1"/>Uniquement des particuliers (B2C)</label>
+      <label class="opt-label"><input type="radio" name="d1" data-q="d1"/>Uniquement des entreprises et professionnels (B2B)</label>
+      <label class="opt-label"><input type="radio" name="d1" data-q="d1"/>Les deux</label>
+    </div>
+  </div>
+
+  <div class="question" id="q-d2">
+    <div class="q-num">D2</div><div class="q-text">Comment formalisez-vous vos relations commerciales actuellement ?</div>
+    <div class="q-hint">Plusieurs choix possibles</div>
+    <div class="options">
+      <label class="opt-label"><input type="checkbox" data-q="d2"/>Par email uniquement (pas de contrat formel)</label>
+      <label class="opt-label"><input type="checkbox" data-q="d2"/>Par devis signé</label>
+      <label class="opt-label"><input type="checkbox" data-q="d2"/>Par contrat signé</label>
+      <label class="opt-label"><input type="checkbox" data-q="d2"/>Par simple accord verbal</label>
+      <label class="opt-label"><input type="checkbox" data-q="d2"/>Je n'ai pas encore de clients</label>
+    </div>
+  </div>
+
+  <div class="question" id="q-d3">
+    <div class="q-num">D3</div><div class="q-text">Avez-vous déjà eu des litiges clients ou des impayés ?</div>
+    <div class="q-hint">Un seul choix</div>
+    <div class="options">
+      <label class="opt-label"><input type="radio" name="d3" data-q="d3"/>Non</label>
+      <label class="opt-label"><input type="radio" name="d3" data-q="d3"/>Oui — je veux me protéger pour l'avenir</label>
+      <label class="opt-label"><input type="radio" name="d3" data-q="d3"/>Je préfère ne pas préciser</label>
+    </div>
+  </div>
+
+  <div class="question" id="q-d4">
+    <div class="q-num">D4</div><div class="q-text">Avez-vous des conditions particulières à intégrer dans vos CGV ou contrats ?</div>
+    <div class="q-hint">Si vous avez sélectionné des CGV ou contrats dans le catalogue produits</div>
+    <textarea class="field-input" data-q="d4" placeholder="Ex. : acompte obligatoire, annulation sous 48h, accès à des lieux privés, produits personnalisés non retournables..." style="margin-top:10px;min-height:100px"></textarea>
+  </div>
+</div></div></div>
+
+<!-- BLOC E -->
+<div class="bloc"><div class="section-shell"><div class="section-core">
+  <div class="section-header"><span class="bloc-badge">Bloc E</span><span class="section-title-text">Format et charte graphique</span></div>
+
+  <div class="question" id="q-e1">
+    <div class="q-num">E1</div><div class="q-text">Avez-vous un logo et une charte graphique à intégrer dans les documents ?</div>
+    <div class="q-hint">Un seul choix</div>
+    <div class="options">
+      <label class="opt-label"><input type="radio" name="e1" data-q="e1"/>Oui — logo disponible (je le fournis par email)</label>
+      <label class="opt-label"><input type="radio" name="e1" data-q="e1"/>Non — DSR adapte à mon identité visuelle</label>
+    </div>
+    <div class="precision-wrap"><span class="precision-label">Couleurs de ma charte :</span>
+    <input class="field-input sm" data-q="e1-prec" type="text" placeholder="Ex. : bleu marine et doré, ou codes hex (#1a2b3c)..."/></div>
+  </div>
+
+  <div class="question" id="q-e2">
+    <div class="q-num">E2</div><div class="q-text">Dans quel format souhaitez-vous recevoir les documents ?</div>
+    <div class="q-hint">Plusieurs choix possibles</div>
+    <div class="options">
+      <label class="opt-label"><input type="checkbox" data-q="e2"/>PDF (lecture et impression uniquement)</label>
+      <label class="opt-label"><input type="checkbox" data-q="e2"/>Word / .docx (modifiable en autonomie)</label>
+      <label class="opt-label"><input type="checkbox" data-q="e2"/>Markdown (.md — pour intégration technique ou web)</label>
+      <label class="opt-label"><input type="checkbox" data-q="e2"/>Excel / tableur (pour les outils de gestion)</label>
+      <label class="opt-label"><input type="checkbox" data-q="e2"/>Les trois principaux (PDF + Word + Markdown)</label>
+    </div>
+  </div>
+</div></div></div>
+
+<!-- BLOC F -->
+<div class="bloc"><div class="section-shell"><div class="section-core">
+  <div class="section-header"><span class="bloc-badge">Bloc F</span><span class="section-title-text">Urgences, délais et compléments</span></div>
+
+  <div class="question" id="q-f1">
+    <div class="q-num">F1</div><div class="q-text">Y a-t-il un document urgent dont vous avez besoin en priorité ?</div>
+    <div class="q-hint">Un seul choix</div>
+    <div class="options">
+      <label class="opt-label"><input type="radio" name="f1" data-q="f1"/>Non, tout est à traiter au même rythme</label>
+      <label class="opt-label"><input type="radio" name="f1" data-q="f1"/>Oui, un document est urgent</label>
+    </div>
+    <div class="precision-wrap"><span class="precision-label">Document urgent / date limite :</span>
+    <input class="field-input sm" data-q="f1-prec" type="text" placeholder="Ex. : CGV avant le 15/03 pour signer un client..."/></div>
+  </div>
+
+  <div class="question" id="q-f2">
+    <div class="q-num">F2</div><div class="q-text">Avez-vous un rendez-vous ou une démarche pour lequel ce document est nécessaire ?</div>
+    <textarea class="field-input" data-q="f2" placeholder="Ex. : rendez-vous banque le 20/03, présentation à un partenaire, contrôle administratif à venir..." style="margin-top:10px;min-height:100px"></textarea>
+  </div>
+
+  <div class="question" id="q-f3">
+    <div class="q-num">F3</div><div class="q-text">Y a-t-il des éléments importants sur votre activité ou vos contraintes que nous n'avons pas abordés ?</div>
+    <textarea class="field-input" data-q="f3" placeholder="Contexte particulier, secteur réglementé, contraintes spécifiques, informations complémentaires..." style="margin-top:10px;min-height:110px"></textarea>
+  </div>
+</div></div></div>
+<!-- BLOC PRODUITS — Sélection des produits DSR Juridique -->
+<div class="bloc">
+  <div class="section-shell"><div class="section-core">
+    <div class="section-header">
+      <span class="bloc-badge">Catalogue</span>
+      <span class="section-title-text">Sélection de vos produits</span>
+    </div>
+
+    <div class="products-intro">
+      <p class="products-intro-text">
+        Sélectionnez le ou les produits qui vous intéressent dans le catalogue ci-dessous. Vous pouvez en cocher autant que vous le souhaitez : votre questionnaire et le devis personnalisé qui l'accompagne s'ajusteront automatiquement à vos choix.
+      </p>
+      <div class="products-tarif-notice">
+        <div class="products-tarif-notice-icon">💡</div>
+        <div class="products-tarif-notice-body">
+          <strong>Les tarifs affichés sont indicatifs et fournis à titre informatif.</strong>
+          Votre questionnaire sera systématiquement accompagné d'un devis personnalisé sur lequel des <strong>remises et offres exceptionnelles</strong> pourront s'appliquer selon le volume de produits sélectionnés et la combinaison avec d'autres services DSR : sites vitrine ou e-commerce, automatisations métier, applications, packs tout inclus.
+        </div>
+      </div>
+    </div>
+
+    <div class="product-category">
+      <div class="product-category-header">
+        <h3 class="product-category-title">Conformité site</h3>
+        <p class="product-category-subtitle">Mentions légales, RGPD, cookies</p>
+      </div>
+      <div class="product-grid">
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="1.1" data-title="Mentions légales site vitrine" data-tarif="180"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">1.1</span>
+              <span class="product-card-badge">Essentiel</span>
+            </div>
+            <div class="product-card-title">Mentions légales site vitrine</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>180 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="1.2" data-title="Mentions légales site e-commerce" data-tarif="190"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">1.2</span>
+              <span class="product-card-badge">Essentiel</span>
+            </div>
+            <div class="product-card-title">Mentions légales site e-commerce</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>190 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="1.3" data-title="Politique de confidentialité RGPD" data-tarif="180"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">1.3</span>
+              <span class="product-card-badge">Indispensable</span>
+            </div>
+            <div class="product-card-title">Politique de confidentialité RGPD</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>180 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="1.4" data-title="Bandeau cookies + politique cookies" data-tarif="180"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">1.4</span>
+              <span class="product-card-badge">Essentiel</span>
+            </div>
+            <div class="product-card-title">Bandeau cookies + politique cookies</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>180 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="product-category">
+      <div class="product-category-header">
+        <h3 class="product-category-title">Cadre contractuel</h3>
+        <p class="product-category-subtitle">CGV, CGU, contrats sur mesure</p>
+      </div>
+      <div class="product-grid">
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="2.1" data-title="Conditions générales de vente (CGV)" data-tarif="390"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">2.1</span>
+              <span class="product-card-badge">Stratégique</span>
+            </div>
+            <div class="product-card-title">Conditions générales de vente (CGV)</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>390 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="2.2" data-title="Conditions générales d'utilisation (CGU)" data-tarif="390"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">2.2</span>
+              <span class="product-card-badge">Stratégique</span>
+            </div>
+            <div class="product-card-title">Conditions générales d'utilisation (CGU)</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>390 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="2.3" data-title="Conditions générales de service / prestation" data-tarif="390"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">2.3</span>
+              <span class="product-card-badge">Stratégique</span>
+            </div>
+            <div class="product-card-title">Conditions générales de service / prestation</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>390 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="2.4" data-title="Contrat de prestation B2B" data-tarif="440"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">2.4</span>
+              <span class="product-card-badge">Premium</span>
+            </div>
+            <div class="product-card-title">Contrat de prestation B2B</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>440 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="2.5" data-title="Contrat de prestation B2C" data-tarif="390"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">2.5</span>
+              <span class="product-card-badge">Stratégique</span>
+            </div>
+            <div class="product-card-title">Contrat de prestation B2C</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>390 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="2.6" data-title="Contrat d'accompagnement / conseil" data-tarif="390"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">2.6</span>
+              <span class="product-card-badge">Stratégique</span>
+            </div>
+            <div class="product-card-title">Contrat d'accompagnement / conseil</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>390 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="product-category">
+      <div class="product-category-header">
+        <h3 class="product-category-title">Documents commerciaux</h3>
+        <p class="product-category-subtitle">Devis, factures, bons de commande</p>
+      </div>
+      <div class="product-grid">
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="3.1" data-title="Modèle de devis conforme" data-tarif="160"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">3.1</span>
+              <span class="product-card-badge">Essentiel</span>
+            </div>
+            <div class="product-card-title">Modèle de devis conforme</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>160 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="3.2" data-title="Modèle de facture conforme" data-tarif="160"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">3.2</span>
+              <span class="product-card-badge">Essentiel</span>
+            </div>
+            <div class="product-card-title">Modèle de facture conforme</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>160 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="3.3" data-title="Bon de commande / bon pour accord" data-tarif="160"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">3.3</span>
+              <span class="product-card-badge">Essentiel</span>
+            </div>
+            <div class="product-card-title">Bon de commande / bon pour accord</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>160 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="product-category">
+      <div class="product-category-header">
+        <h3 class="product-category-title">Conformité interne</h3>
+        <p class="product-category-subtitle">RGPD avancé, procédures, NDA</p>
+      </div>
+      <div class="product-grid">
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="4.1" data-title="Charte de traitement des données clients" data-tarif="210"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">4.1</span>
+              <span class="product-card-badge">Structurant</span>
+            </div>
+            <div class="product-card-title">Charte de traitement des données clients</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>210 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="4.2" data-title="Registre simplifié RGPD" data-tarif="210"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">4.2</span>
+              <span class="product-card-badge">Structurant</span>
+            </div>
+            <div class="product-card-title">Registre simplifié RGPD</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>210 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="4.3" data-title="Documentation interne de conformité" data-tarif="320"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">4.3</span>
+              <span class="product-card-badge">Premium</span>
+            </div>
+            <div class="product-card-title">Documentation interne de conformité</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>320 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="4.4" data-title="Accord / clause de confidentialité (NDA)" data-tarif="160"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">4.4</span>
+              <span class="product-card-badge">Essentiel</span>
+            </div>
+            <div class="product-card-title">Accord / clause de confidentialité (NDA)</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>160 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="product-category">
+      <div class="product-category-header">
+        <h3 class="product-category-title">Packs tout-en-un</h3>
+        <p class="product-category-subtitle">Solutions complètes économiques</p>
+      </div>
+      <div class="product-grid">
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="5.1" data-title="Pack Essentiel Micro-Entrepreneur" data-tarif="890"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">5.1</span>
+              <span class="product-card-badge">Pack essentiel</span>
+            </div>
+            <div class="product-card-title">Pack Essentiel Micro-Entrepreneur</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>890 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="6.1" data-title="Pack Conformité E-commerce 50 produits" data-tarif="990"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">6.1</span>
+              <span class="product-card-badge">Pack stratégique</span>
+            </div>
+            <div class="product-card-title">Pack Conformité E-commerce 50 produits</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>990 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="product-category">
+      <div class="product-category-header">
+        <h3 class="product-category-title">Analyse stratégique</h3>
+        <p class="product-category-subtitle">Études, veille, diagnostic</p>
+      </div>
+      <div class="product-grid">
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="S.1" data-title="Étude de marché personnalisée" data-tarif="350"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">S.1</span>
+              <span class="product-card-badge">Sur mesure</span>
+            </div>
+            <div class="product-card-title">Étude de marché personnalisée</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>350 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="S.2" data-title="Veille concurrentielle approfondie" data-tarif="250"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">S.2</span>
+              <span class="product-card-badge">Stratégique</span>
+            </div>
+            <div class="product-card-title">Veille concurrentielle approfondie</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>250 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="S.3" data-title="Analyse SWOT personnalisée" data-tarif="290"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">S.3</span>
+              <span class="product-card-badge">Essentiel</span>
+            </div>
+            <div class="product-card-title">Analyse SWOT personnalisée</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>290 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="S.4" data-title="Note juridique spécifique par secteur" data-tarif="350"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">S.4</span>
+              <span class="product-card-badge">Sur mesure</span>
+            </div>
+            <div class="product-card-title">Note juridique spécifique par secteur</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>350 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="product-category">
+      <div class="product-category-header">
+        <h3 class="product-category-title">Stratégie commerciale</h3>
+        <p class="product-category-subtitle">Plan d'action, argumentaires</p>
+      </div>
+      <div class="product-grid">
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="S.5" data-title="Plan commercial sur 12 mois" data-tarif="200"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">S.5</span>
+              <span class="product-card-badge">Opérationnel</span>
+            </div>
+            <div class="product-card-title">Plan commercial sur 12 mois</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>200 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="S.6" data-title="Argumentaire commercial B2B / B2C" data-tarif="450"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">S.6</span>
+              <span class="product-card-badge">Sur mesure</span>
+            </div>
+            <div class="product-card-title">Argumentaire commercial B2B / B2C</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>450 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="S.7" data-title="Argumentaire + supports digitaux" data-tarif="900"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">S.7</span>
+              <span class="product-card-badge">Pack Premium</span>
+            </div>
+            <div class="product-card-title">Argumentaire + supports digitaux</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>900 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="product-category">
+      <div class="product-category-header">
+        <h3 class="product-category-title">Prospection commerciale</h3>
+        <p class="product-category-subtitle">Partenariats et démarchage</p>
+      </div>
+      <div class="product-grid">
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="S.8" data-title="Courriers de partenariats institutionnels" data-tarif="290"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">S.8</span>
+              <span class="product-card-badge">Rédactionnel</span>
+            </div>
+            <div class="product-card-title">Courriers de partenariats institutionnels</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>290 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+        <label class="product-card">
+          <input type="checkbox" data-q="produit" data-code="S.9" data-title="Modèles d'emails de prospection" data-tarif="120"/>
+          <div class="product-card-inner">
+            <div class="product-card-top">
+              <span class="product-card-code">S.9</span>
+              <span class="product-card-badge">Opérationnel</span>
+            </div>
+            <div class="product-card-title">Modèles d'emails de prospection</div>
+            <div class="product-card-bottom">
+              <span class="product-card-tarif"><strong>120 €</strong> HT</span>
+              <span class="product-card-tarif-note">indicatif</span>
+            </div>
+            <div class="product-card-check"></div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="products-summary" id="productsSummary">
+      <div class="products-summary-icon">🛒</div>
+      <div class="products-summary-content">
+        <div class="products-summary-count"><strong id="productsCount">0</strong> produit(s) sélectionné(s)</div>
+        <div class="products-summary-total">Total indicatif HT : <strong id="productsTotal">0 €</strong></div>
+        <div class="products-summary-disclaimer">Tarif final ajusté avec remises sur devis personnalisé.</div>
+      </div>
+    </div>
+
+    <div class="products-precision">
+      <label class="field-label">Autre besoin ou demande spécifique non listée :</label>
+      <textarea class="field-input" data-q="produit-autre" placeholder="Ex. : J'ai un besoin particulier non couvert par les produits ci-dessus, ou je souhaite une combinaison sur mesure..." style="min-height:80px"></textarea>
+    </div>
+
+  </div></div>
+</div>
+
+<!-- SECTION ACTIONS EN FIN DE PAGE -->
+<div class="action-section">
+  <div class="action-shell"><div class="action-core">
+    <div class="section-header" style="justify-content:center;border-bottom:none;margin-bottom:16px;padding-bottom:0">
+      <span class="bloc-badge">Envoi</span>
+      <span class="section-title-text">Transmettre votre questionnaire</span>
+    </div>
+    <div class="completion-bar-wrap">
+      <div class="completion-label">
+        <span>Complétion du questionnaire</span>
+        <span id="countLabel"><strong id="countDone" style="color:var(--acc)">0</strong> / <strong id="countTotal">23</strong> questions</span>
+      </div>
+      <div class="completion-track"><div class="completion-fill" id="completionFill"></div></div>
+    </div>
+    <p class="action-sub" id="actionSub">Complétez toutes les questions pour activer l'envoi. Vos réponses sont sauvegardées automatiquement.</p>
+    <div class="sent-badge" id="sentBadge">✓ Questionnaire transmis à DSR</div>
+    <div class="action-btns">
+      <button class="btn-dl" id="btnMD" onclick="telechargerMD()" disabled>⬇ Télécharger .md</button>
+      <button class="btn-dl" id="btnPDF" onclick="telechargerPDF()" disabled>📄 Télécharger PDF</button>
+      <button class="btn-send" id="btnEnvoi" onclick="teleTransmettre()" disabled>
+        <span class="btn-icon">✉</span> Télétransmettre
+      </button>
+    </div>
+    <p class="dl-note" id="dlNote">Les téléchargements PDF et .md seront disponibles après l'envoi.</p>
+    <div class="inline-error" id="clientError2">⚠ Merci de renseigner votre nom et votre email avant d'envoyer.</div>
+  </div></div>
+</div>
+
+<footer class="page-footer">
+  <div class="page-footer-brand"><img src="dsr-logo.png" alt="DSR" class="dsr-logo-footer"/></div>
+  <div class="page-footer-info">Digital Solutions Réseaux · contact@dsr-agency.com<br>Documentation juridique sur mesure : Sur devis · Tout compris · Sans abonnement</div>
+  <div class="page-footer-conf">Document confidentiel — réservé à l'usage de DSR et du client · © 2026</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════════════
+const CACHE_KEY = 'dsr-q4-juridique-v1';
+let envoiEffectue = false;
+
+const QUESTIONS_IDS = [
+  'produit',
+  'a1','a2','a3',
+  'b1','b2','b3','b4','b6','b7',
+  'c1','c2','c3','c5',
+  'd1','d2','d3','d4',
+  'e1','e2',
+  'f1','f2','f3'
+];
+
+// ── DATE ──────────────────────────────────────────────────
+const auj = new Date();
+document.getElementById('dateDisplay').textContent =
+  auj.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+// ══════════════════════════════════════════════════════════
+// CACHE LOCAL — SAUVEGARDE ET RESTAURATION
+// ══════════════════════════════════════════════════════════
+function sauvegarder() {
+  const data = {};
+  // Champs texte / email / url / textarea / date
+  document.querySelectorAll('[data-q]:not([type=checkbox]):not([type=radio])').forEach(el => {
+    if (el.value) data[el.dataset.q + (el.id ? '-id' : '-val')] = el.value;
+    // clé unique basée sur data-q + position
+  });
+  // On refait proprement avec une clé unique
+  const d2 = {};
+  document.querySelectorAll('[data-q]').forEach((el, i) => {
+    const k = el.dataset.q + '::' + i;
+    if (el.type === 'checkbox' || el.type === 'radio') d2[k] = el.checked;
+    else d2[k] = el.value;
+  });
+  // Infos client
+  d2['_nom']  = document.getElementById('clientNom').value;
+  d2['_ent']  = document.getElementById('clientEntreprise').value;
+  d2['_email']= document.getElementById('clientEmail').value;
+  d2['_tel']  = document.getElementById('clientTel').value;
+  d2['_envoye'] = envoiEffectue;
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify(d2)); } catch(e){}
+}
+
+function restaurer() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    document.querySelectorAll('[data-q]').forEach((el, i) => {
+      const k = el.dataset.q + '::' + i;
+      if (k in d) {
+        if (el.type === 'checkbox' || el.type === 'radio') el.checked = d[k];
+        else el.value = d[k] || '';
+      }
+    });
+    if (d['_nom'])   document.getElementById('clientNom').value   = d['_nom'];
+    if (d['_ent'])   document.getElementById('clientEntreprise').value = d['_ent'];
+    if (d['_email']) document.getElementById('clientEmail').value = d['_email'];
+    if (d['_tel'])   document.getElementById('clientTel').value   = d['_tel'];
+    if (d['_envoye']) {
+      envoiEffectue = true;
+      afficherEtatPost();
+    }
+  } catch(e){}
+}
+
+// ══════════════════════════════════════════════════════════
+// PROGRESSION ET ÉTAT DES BOUTONS
+// ══════════════════════════════════════════════════════════
+
+// Sous-champs spéciaux par question
+const SOUS_CHAMPS = {
+};
+
+function estRemplie(qId) {
+  // 1. Cases cochées avec data-q exact
+  const checks = document.querySelectorAll('[data-q="' + qId + '"]:checked');
+  if (checks.length > 0) return true;
+
+  // 2. Champs texte / textarea / url / email / date avec data-q exact
+  const inputs = document.querySelectorAll('[data-q="' + qId + '"]');
+  for (const el of inputs) {
+    if (!['checkbox','radio'].includes(el.type) && el.value && el.value.trim()) return true;
+  }
+
+  // 3. Champ précision (data-q="qId-prec")
+  const prec = document.querySelector('[data-q="' + qId + '-prec"]');
+  if (prec && prec.value && prec.value.trim()) return true;
+
+  // 4. Sous-champs numérotés génériques (ex. b7-1 à b7-9)
+  for (let n = 1; n <= 9; n++) {
+    const subs = document.querySelectorAll('[data-q="' + qId + '-' + n + '"]');
+    for (const s of subs) { if (s.value && s.value.trim()) return true; }
+  }
+
+  // 5. Sous-champs spéciaux nommés (b7, e5, f3)
+  if (SOUS_CHAMPS[qId]) {
+    for (const sc of SOUS_CHAMPS[qId]) {
+      const el = document.querySelector('[data-q="' + sc + '"]');
+      if (!el) continue;
+      if ((el.type === 'checkbox' || el.type === 'radio') && el.checked) return true;
+      if (!['checkbox','radio'].includes(el.type) && el.value && el.value.trim()) return true;
+    }
+  }
+
+  return false;
+}
+
+
+// === Bloc Produits — Compteur et total ===
+function updateProductsSummary() {
+  const selected = document.querySelectorAll('[data-q="produit"]:checked');
+  const count = selected.length;
+  let total = 0;
+  selected.forEach(el => {
+    const tarif = parseFloat(el.dataset.tarif || 0);
+    if (!isNaN(tarif)) total += tarif;
+  });
+  const cntEl = document.getElementById('productsCount');
+  const totEl = document.getElementById('productsTotal');
+  if (cntEl) cntEl.textContent = count;
+  if (totEl) totEl.textContent = total.toLocaleString('fr-FR') + ' €';
+}
+
+function majEtat() {
+  updateProductsSummary();
+  let done = 0;
+  const total = QUESTIONS_IDS.length;
+  QUESTIONS_IDS.forEach(q => { if (estRemplie(q)) done++; });
+
+  const pct = Math.round((done / total) * 100);
+
+  // Barre de progression en haut
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${done} réponse${done>1?'s':''} sur ${total}`;
+  document.getElementById('progressPct').textContent = pct + '%';
+
+  // Barre de complétion en bas
+  document.getElementById('completionFill').style.width = pct + '%';
+  document.getElementById('countDone').textContent = done;
+  document.getElementById('countTotal').textContent = total;
+
+  const tout = (done === total);
+
+  // Bouton envoyer : actif quand tout est rempli
+  const btnEnvoi = document.getElementById('btnEnvoi');
+  btnEnvoi.disabled = !tout;
+
+  // Boutons téléchargement : actifs uniquement après envoi
+  document.getElementById('btnMD').disabled  = !envoiEffectue;
+  document.getElementById('btnPDF').disabled = !envoiEffectue;
+
+  // Message sous les boutons
+  const dlNote = document.getElementById('dlNote');
+  const actionSub = document.getElementById('actionSub');
+  if (envoiEffectue) {
+    dlNote.style.display = 'none';
+  } else if (tout) {
+    actionSub.textContent = 'Tout est renseigné ! Cliquez sur "Télétransmettre" pour envoyer votre questionnaire à DSR.';
+    dlNote.textContent = `Les téléchargements PDF et .md seront disponibles après l'envoi.`;
+  } else {
+    actionSub.textContent = `Complétez toutes les questions pour activer l'envoi. Vos réponses sont sauvegardées automatiquement.`;
+    dlNote.textContent = `Les téléchargements PDF et .md seront disponibles après l'envoi.`;
+  }
+
+  sauvegarder();
+}
+
+document.addEventListener('input',  majEtat);
+document.addEventListener('change', majEtat);
+
+// ══════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' '+type : '');
+  setTimeout(() => { t.className = 'toast'; }, 5000);
+}
+
+// ══════════════════════════════════════════════════════════
+// VALIDATION CLIENT
+// ══════════════════════════════════════════════════════════
+function valider() {
+  const nom   = document.getElementById('clientNom').value.trim();
+  const email = document.getElementById('clientEmail').value.trim();
+  const e1 = document.getElementById('clientError');
+  const e2 = document.getElementById('clientError2');
+  if (!nom || !email) {
+    e1.style.display = 'block'; e2.style.display = 'block';
+    document.getElementById('clientNom').scrollIntoView({behavior:'smooth',block:'center'});
+    return false;
+  }
+  e1.style.display = 'none'; e2.style.display = 'none';
+  return true;
+}
+
+// ══════════════════════════════════════════════════════════
+// GÉNÉRATION DU TEXTE
+// ══════════════════════════════════════════════════════════
+function valeurQ(qId) {
+  const checks = [...document.querySelectorAll(`[data-q="${qId}"]:checked`)]
+    .map(el => el.closest('.opt-label') ? el.closest('.opt-label').textContent.trim() : '');
+  if (checks.length) return checks.join('\n  ✓ ');
+  const inputs = document.querySelectorAll(`[data-q="${qId}"]`);
+  for (const el of inputs) {
+    if (!['checkbox','radio'].includes(el.type) && el.value.trim()) return el.value.trim();
+  }
+  return 'Non renseigné';
+}
+function valeurPrec(qId) {
+  const el = document.querySelector(`[data-q="${qId}-prec"]`);
+  return el && el.value.trim() ? el.value.trim() : '';
+}
+function valeurSubs(prefix, nums) {
+  return nums.map(n => {
+    const el = document.querySelector(`[data-q="${prefix}-${n}"]`);
+    return el && el.value.trim() ? `${n}. ${el.value.trim()}` : '';
+  }).filter(Boolean).join('\n  ');
+}
+
+function genererTexte() {
+  const nom   = document.getElementById('clientNom').value.trim() || '—';
+  const ent   = document.getElementById('clientEntreprise').value.trim() || '—';
+  const email = document.getElementById('clientEmail').value.trim() || '—';
+  const tel   = document.getElementById('clientTel').value.trim() || '—';
+  const date  = document.getElementById('dateDisplay').textContent;
+
+  let t = `QUESTIONNAIRE DOCUMENTATION JURIDIQUE — DSR
+`;
+  t += `${'═'.repeat(50)}
+`;
+  t += `Date : ${date}
+`;
+  t += `Client : ${nom}
+Entreprise : ${ent}
+Email : ${email}
+Tél : ${tel}
+
+`;
+
+  // Section produits sélectionnés
+  const produitsSelectionnes = document.querySelectorAll('[data-q="produit"]:checked');
+  if (produitsSelectionnes.length > 0) {
+    t += `${'─'.repeat(50)}
+PRODUITS SÉLECTIONNÉS
+${'─'.repeat(50)}
+
+`;
+    let totalIndicatif = 0;
+    produitsSelectionnes.forEach(el => {
+      const code = el.dataset.code || '';
+      const titre = el.dataset.title || '';
+      const tarif = parseFloat(el.dataset.tarif || 0);
+      totalIndicatif += isNaN(tarif) ? 0 : tarif;
+      t += `  ✓ [${code}] ${titre} — ${tarif} € HT (indicatif)
+`;
+    });
+    t += `
+  Total indicatif HT : ${totalIndicatif.toLocaleString('fr-FR')} €
+`;
+    t += `  ⚠ Tarifs indicatifs et informatifs. Devis personnalisé avec remises sur volume et combinaisons de services.
+
+`;
+    // Précision libre
+    const autre = document.querySelector('[data-q="produit-autre"]');
+    if (autre && autre.value.trim()) {
+      t += `  Autre besoin spécifique :
+  ${autre.value.trim()}
+
+`;
+    }
+  } else {
+    t += `${'─'.repeat(50)}
+PRODUITS SÉLECTIONNÉS
+${'─'.repeat(50)}
+  (Aucun produit sélectionné dans le catalogue.)
+
+`;
+  }
+
+
+  const blocs = [
+    ['BLOC A — Projet et objectifs', [
+      ['A1 — Pourquoi cette documentation ?', 'a1'],
+      ['A2 — But principal', 'a2'],
+      ['A3 — Résultat attendu', 'a3'],
+    ]],
+    ['BLOC B — Documents souhaités (questions générales)', [
+      ['B1 — Analyse stratégique', 'b1'],
+      ['B2 — Modèle économique', 'b2'],
+      ['B3 — Cadre juridique', 'b3'],
+      ['B4 — Plan commercial', 'b4'],
+      ['B5 — Documents commerciaux', 'b6'],
+      ['B6 — Documents existants', 'b7'],
+    ]],
+    ['BLOC C — Votre situation', [
+      ['C1 — Statut juridique', 'c1'],
+      ['C2 — Immatriculation', 'c2'],
+      ['C3 — Secteur d\'activité', 'c3'],
+      ['C4 — Accompagnement externe', 'c5'],
+    ]],
+    ['BLOC D — Clients et contrats', [
+      ['D1 — Type de clients', 'd1'],
+      ['D2 — Formalisation actuelle', 'd2'],
+      ['D3 — Litiges / impayés', 'd3'],
+      ['D4 — Conditions particulières', 'd4'],
+    ]],
+    ['BLOC E — Format et charte', [
+      ['E1 — Logo et charte graphique', 'e1'],
+      ['E2 — Format souhaité', 'e2'],
+    ]],
+    ['BLOC F — Urgences et compléments', [
+      ['F1 — Document urgent', 'f1'],
+      ['F2 — Rendez-vous / démarche', 'f2'],
+      ['F3 — Informations complémentaires', 'f3'],
+    ]],
+  ];
+
+  blocs.forEach(([titre, qs]) => {
+    t += `
+${'─'.repeat(50)}
+${titre}
+${'─'.repeat(50)}
+`;
+    qs.forEach(([label, qId]) => {
+      t += `
+${label}
+`;
+      if (qId === null) {
+        // Q4 — aucun sous-champ nommé spécial
+        t += '  (voir détail dans le questionnaire)';
+      } else {
+        const v = valeurQ(qId);
+        t += v.startsWith('Non') ? `  ${v}` : `  ✓ ${v}`;
+        const p = valeurPrec(qId);
+        if (p) t += `
+  → Précision : ${p}`;
+        // sous-champs url
+        const url = document.querySelector(`[data-q="${qId}-url"]`);
+        if (url && url.value.trim()) t += `
+  → URL : ${url.value.trim()}`;
+        const d1 = document.querySelector(`[data-q="${qId}-prec"]`);
+        // date
+        const datEl = document.querySelector(`[data-q="${qId}-prec"][type=date]`);
+        if (datEl && datEl.value) t += `
+  → Date : ${datEl.value}`;
+      }
+      t += '\n';
+    });
+  });
+
+  t += `
+${'═'.repeat(50)}
+`;
+  t += `© DSR · Digital Solutions Réseaux · contact@dsr-agency.com
+`;
+  t += `Document confidentiel · ${date}
+`;
+  return t;
+}
+
+// ══════════════════════════════════════════════════════════
+// ÉTAT POST-ENVOI
+// ══════════════════════════════════════════════════════════
+function afficherEtatPost() {
+  document.getElementById('sentBadge').classList.add('show');
+  document.getElementById('actionSub').textContent = 'Votre questionnaire a été transmis à DSR. Vous pouvez maintenant télécharger votre copie.';
+  // btnEnvoi reste toujours actif pour renvoi éventuel
+  document.getElementById('btnMD').disabled  = false;
+  document.getElementById('btnPDF').disabled = false;
+  document.getElementById('dlNote').style.display = 'none';
+}
+
+// ══════════════════════════════════════════════════════════
+// ACTIONS BOUTONS
+// ══════════════════════════════════════════════════════════
+function teleTransmettre() {
+  if (!valider()) { showToast(`⚠ Renseignez votre nom et email avant d'envoyer.`,'error'); return; }
+  const nom = document.getElementById('clientNom').value.trim();
+  const ent = document.getElementById('clientEntreprise').value.trim();
+  const texte = genererTexte();
+  const subj  = encodeURIComponent(`Retour Questionnaire Documentation Juridique — ${ent || nom} — DSR`);
+  const body  = encodeURIComponent(texte);
+  window.location.href = `mailto:contact@dsr-agency.com?subject=${subj}&body=${body}`;
+  setTimeout(() => {
+    envoiEffectue = true;
+    afficherEtatPost();
+    sauvegarder();
+    showToast(`✓ Votre client mail s'est ouvert. Envoyez le message pour confirmer.`,'success');
+  }, 800);
+}
+
+function telechargerMD() {
+  const nom = document.getElementById('clientNom').value.trim() || 'client';
+  const md  = '# Questionnaire Documentation Juridique — DSR\n\n' + genererTexte();
+  const b   = new Blob([md],{type:'text/markdown;charset=utf-8'});
+  const url = URL.createObjectURL(b);
+  const a   = document.createElement('a');
+  a.href = url;
+  a.download = `DSR-Q4-Juridique-${nom.replace(/\s+/g,'-')}-${new Date().toISOString().slice(0,10)}.md`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✓ Fichier .md téléchargé.','success');
+}
+
+function telechargerPDF() {
+  try {
+    const {jsPDF} = window.jspdf;
+    const doc = new jsPDF({orientation:'p',unit:'mm',format:'a4'});
+    const nom  = document.getElementById('clientNom').value.trim() || 'Client';
+    const ent  = document.getElementById('clientEntreprise').value.trim() || '';
+    const date = document.getElementById('dateDisplay').textContent;
+
+    doc.setFillColor(8,10,12); doc.rect(0,0,210,30,'F');
+    doc.setFillColor(46,134,222); doc.rect(0,30,210,2,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(15); doc.setTextColor(240,244,248);
+    doc.text('DSR — Questionnaire Documentation Juridique',14,13);
+    doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(122,143,166);
+    doc.text('Digital Solutions Réseaux · contact@dsr-agency.com',14,21);
+    doc.text(date,14,28);
+
+    let y = 42;
+    doc.setFontSize(8); doc.setTextColor(46,134,222); doc.setFont('helvetica','bold');
+    doc.text('CLIENT',14,y); y+=5;
+    doc.setTextColor(50,50,50); doc.setFont('helvetica','normal');
+    doc.text(`Nom : ${nom}   |   Entreprise : ${ent||'—'}   |   Email : ${document.getElementById('clientEmail').value||'—'}`,14,y); y+=10;
+
+    const lignes = genererTexte().split('\n');
+    doc.setFontSize(8.5);
+    for (const ligne of lignes) {
+      if (y > 278) { doc.addPage(); y = 16; }
+      const isSepar = ligne.startsWith('═') || ligne.startsWith('─');
+      const isBloc  = ligne.startsWith('BLOC');
+      const isQ     = /^[A-F]\d/.test(ligne);
+      if (isBloc) {
+        y+=3; doc.setFillColor(17,20,22); doc.rect(10,y-5,190,7,'F');
+        doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(46,134,222);
+        doc.text(ligne,14,y); y+=6;
+        doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(50,50,50);
+      } else if (isQ) {
+        y+=1; doc.setFont('helvetica','bold'); doc.setTextColor(80,80,80); doc.setFontSize(8.5);
+        doc.text(ligne,14,y); y+=4;
+        doc.setFont('helvetica','normal'); doc.setTextColor(50,50,50);
+      } else if (isSepar) {
+        doc.setDrawColor(46,134,222,0.2); doc.line(14,y,196,y); y+=3;
+      } else {
+        const wrapped = doc.splitTextToSize(ligne,182);
+        for (const l of wrapped) {
+          if (y>278){doc.addPage();y=16;}
+          doc.text(l,14,y); y+=4.2;
+        }
+      }
+    }
+
+    const nb = doc.internal.getNumberOfPages();
+    for(let i=1;i<=nb;i++){
+      doc.setPage(i);
+      doc.setFillColor(8,10,12); doc.rect(0,287,210,10,'F');
+      doc.setFontSize(7); doc.setTextColor(122,143,166);
+      doc.text('DSR · contact@dsr-agency.com · Document confidentiel',14,294);
+      doc.text(`${i}/${nb}`,196,294,'right');
+    }
+
+    doc.save(`DSR-Q4-Juridique-${nom.replace(/\s+/g,'-')}-${new Date().toISOString().slice(0,10)}.pdf`);
+    showToast('✓ PDF téléchargé avec succès.','success');
+  } catch(e) {
+    showToast('⚠ Erreur PDF — essayez le format .md.','error');
+    console.error(e);
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
+restaurer();
+majEtat();
+</script>
+</body>
+</html>
